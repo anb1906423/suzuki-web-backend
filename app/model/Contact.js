@@ -18,6 +18,30 @@ const contactSchema = new Schema({
         type: String,
         required: false,
     },
+    zalo: {
+        type: String,
+        required: false,
+    },
+    linkToMessenger: {
+        type: String,
+        required: false,
+    },
+    tiktok: {
+        type: String,
+        required: false,
+    },
+    youtube: {
+        type: String,
+        required: false,
+    },
+    instagram: {
+        type: String,
+        required: false,
+    },
+    website: {
+        type: String,
+        required: false,
+    },
 })
 
 contactSchema.method("toJSON", function () {

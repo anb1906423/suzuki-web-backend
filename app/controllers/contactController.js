@@ -4,7 +4,7 @@ const handlePromise = require('../helpers/promise.helper')
 const mongoose = require('mongoose')
 
 const handleCreateContact = async (req, res) => {
-    const { address, email, phoneNumber, linkToFace } = req.body
+    const { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website } = req.body
 
     const count = await Contact.countDocuments();
     if (count >= 1) return res.status(400).json({ "message": "Chỉ được có 1 nội dung liên hệ! " })
@@ -15,6 +15,12 @@ const handleCreateContact = async (req, res) => {
             "email": email,
             "phoneNumber": phoneNumber,
             "linkToFace": linkToFace,
+            "zalo": zalo,
+            "linkToMessenger": linkToMessenger,
+            "instagram": instagram,
+            "youtube": youtube,
+            "tiktok": tiktok,
+            "website": website
         })
         console.log(result);
         res.status(201).send({ message: `New contact ${address} created successfully!` })
@@ -25,12 +31,12 @@ const handleCreateContact = async (req, res) => {
 
 const updateContact = async (req, res, next) => {
     const { id } = req.params;
-    const { address, email, phoneNumber, linkToFace } = req.body;
+    const { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website } = req.body;
 
     try {
         const contact = await Contact.findByIdAndUpdate(
             id,
-            { address, email, phoneNumber, linkToFace },
+            { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website },
             { new: true }
         );
 
