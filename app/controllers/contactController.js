@@ -7,7 +7,7 @@ const handleCreateContact = async (req, res) => {
     const { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website } = req.body
 
     const count = await Contact.countDocuments();
-    if (count >= 1) return res.status(400).json({ "message": "Chỉ được có 1 nội dung liên hệ! " })
+    if (count >= 1) return res.status(400).json({ "message": "Nếu đã từng tạo mới, vui lòng ấn Hoàn thành!!! " })
 
     try {
         const result = await Contact.create({
@@ -30,21 +30,21 @@ const handleCreateContact = async (req, res) => {
 }
 
 const updateContact = async (req, res, next) => {
-    const { id } = req.params;
     const { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website } = req.body;
+    const count = await Contact.countDocuments();
 
     try {
-        const contact = await Contact.findByIdAndUpdate(
-            id,
+        const contact = await Contact.updateMany(
+            {},
             { address, email, phoneNumber, linkToFace, zalo, linkToMessenger, instagram, youtube, tiktok, website },
             { new: true }
         );
 
-        if (!contact) {
-            return res.status(404).json({ message: 'Contact not found' });
+        if (count == 0) {
+            return res.status(404).json({ message: 'Chưa từng tồn tại thông tin liên hệ, vui lòng ấn Tạo mới!!!' });
         }
 
-        res.json(contact);
+        return res.status(200).json({ contact: contact });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -45,6 +45,8 @@ app.use('/admin', require('./app/routes/product'))
 app.use('/', require('./app/routes/user'))
 app.use('/intro', require('./app/routes/intro'))
 app.use('/contact', require('./app/routes/contact'))
+app.use('/overview', require('./app/routes/overview'))
+app.use('/undertake', require('./app/routes/undertake'))
 
 // app.use(verifyJWT);
 

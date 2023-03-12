@@ -7,7 +7,7 @@ const handleCreateIntro = async (req, res) => {
     const { intro } = req.body
 
     const count = await Intro.countDocuments();
-    if (count >= 1) return res.status(400).json({ "message": "Chỉ được tạo tối đa 1 đoạn giới thiệu! " })
+    if (count >= 1) return res.status(400).json({ "message": "Nếu đã từng tạo mới, vui lòng ấn Hoàn thành!!!" })
 
     try {
         const result = await Intro.create({
@@ -29,8 +29,9 @@ const updateIntro = async (req, res, next) => {
             { new: true }
         );
         if (!updatedIntro) {
-            return res.status(404).json({ message: 'No intro found' });
+            return res.status(404).json({ message: 'Chưa từng tồn tại thông tin giới thiệu, vui lòng ấn Tạo mới!!!' });
         }
+
         return res.status(200).json({ intro: updatedIntro.intro });
     } catch (error) {
         return res.status(500).json({ message: error.message });
