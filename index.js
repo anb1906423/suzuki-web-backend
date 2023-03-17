@@ -47,6 +47,8 @@ app.use('/intro', require('./app/routes/intro'))
 app.use('/contact', require('./app/routes/contact'))
 app.use('/overview', require('./app/routes/overview'))
 app.use('/undertake', require('./app/routes/undertake'))
+app.use('/image', require('./app/routes/image.router'))
+app.use('/color', require('./app/routes/color.router'))
 
 // app.use(verifyJWT);
 

@@ -10,10 +10,12 @@ const productSchema = new Schema({
         type: String,
         required: false
     },
-    src: {
-        type: [String],
-        required: true
-    },
+    images: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Image'
+        }
+    ],
     href: {
         type: String,
         required: false
@@ -84,7 +86,14 @@ const productSchema = new Schema({
     },
     version: {
         type: [String],
-    }
+    },
+    outStanding: {
+        type: Boolean,
+    },
+    state: {
+        type: Boolean,
+        default: true,
+    },
 })
 
 productSchema.method("toJSON", function () {

@@ -1,4 +1,5 @@
 const Product = require('../model/Product')
+const Image = require('../model/Image.model')
 const { BadRequestError } = require('../api-error')
 const handlePromise = require('../helpers/promise.helper')
 const mongoose = require('mongoose')
@@ -9,7 +10,9 @@ const getProduct = async (req, res) => {
     if (!product) {
         return res.status(204).json({ 'message': `User ID ${req.params.name} not found` });
     }
-    res.json(product);
+    const images = await Image.find({ productId: product._id }).exec();
+    res.json({ ...product.toJSON(), images });
+    // res.json(product);
 }
 
 const getAllProducts = async (req, res) => {
@@ -71,5 +74,87 @@ const updateProduct = async (req, res, next) => {
     return res.send({ message: 'Cập nhật thông tin xe thành công!', })
 }
 
+const onState = async (req, res) => {
+    const { product_id } = req.body
 
-module.exports = { getProduct, getAllProducts, deleteProducts, updateProduct };
+    try {
+        const product = await Product.findById(product_id);
+
+        if (!product) {
+            res.status(404).send({ message: 'Product not found' });
+            return;
+        }
+
+        product.state = true;
+        await product.save();
+        res.status(201).send({ message: `Product ${product.name} state has been turned on` })
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+
+    }
+}
+
+const offState = async (req, res) => {
+    const { product_id } = req.body
+    try {
+        const product = await Product.findById(product_id);
+
+        if (!product) {
+            res.status(404).send({ message: 'Product not found' });
+            return;
+        }
+
+        product.state = false;
+        await product.save();
+        res.status(201).send({ message: `Product ${product.name} state has been turned off` })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const onOutStanding = async (req, res) => {
+    const { product_id } = req.body
+
+    try {
+        const product = await Product.findById(product_id);
+
+        if (!product) {
+            res.status(404).send({ message: 'Product not found' });
+            return;
+        }
+
+        product.outStanding = true;
+        await product.save();
+        res.status(201).send({ message: `Product ${product.name} is out standing` })
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+
+    }
+}
+
+const offOutStanding = async (req, res) => {
+    const { product_id } = req.body
+    try {
+        const product = await Product.findById(product_id);
+
+        if (!product) {
+            res.status(404).send({ message: 'Product not found' });
+            return;
+        }
+
+        product.outStanding = false;
+        await product.save();
+        res.status(201).send({ message: `Product ${product.name} isn't out standing` })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+module.exports = { getProduct, getAllProducts, deleteProducts, updateProduct, onState, offState, onOutStanding, offOutStanding };

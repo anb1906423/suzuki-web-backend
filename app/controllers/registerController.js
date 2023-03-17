@@ -1,48 +1,67 @@
 const User = require('../model/User')
 const bcrypt = require('bcrypt')
 
-const handleRegister = async (req, res) => {
-    var roles = 0
-    User.count({}, function(error, countUser) {
-        if (countUser == 0) {
-            roles = 1;
-        }
-    });
-    const { fullName, phoneNumber, email, pwd, model, isCash } = req.body
-    if (!fullName || !phoneNumber || !email ) return res.status(400).json({ 'message': 'Họ và tên, số điện thoại, email và password không được để trống!' })
+const handleRegister = async (req, res) => { 
+    let roles = 0
 
-    // if (req.body?.pwd.length < 8) {
-    //     return res.send({ message: 'Mật khẩu phải có ít nhất 8 ký tự!', status: 400 });
-    // }
+    // Tìm số lượng người dùng hiện có trong hệ thống
+    const countUser = await User.countDocuments()
 
-    const foundEmail = await User.findOne({ email: email }).exec();
-    if (foundEmail) {
-        return res.send({ message: 'Địa chỉ email đã được sử dụng!', status: 400 })
+    // Nếu số lượng người dùng <= 1, gán role = 1
+    if (countUser <= 1) {
+        roles = 1;
     }
 
-    const foundPhoneNumber = await User.findOne({ phoneNumber: phoneNumber }).exec();
+    const { fullName, phoneNumber, email, password, modelInterest, isCash } = req.body
+
+    // Kiểm tra các trường bắt buộc
+    if (!fullName || !phoneNumber || !email ) {
+        return res.status(400).json({ message: 'Họ và tên, số điện thoại, email và password không được để trống!' })
+    }
+
+    // Kiểm tra định dạng email hợp lệ
+    const validEmail = /\S+@\S+\.\S+/
+    if (!validEmail.test(email)) {
+        return res.status(400).json({ message: 'Địa chỉ email không hợp lệ!' })
+    }
+
+    // Kiểm tra mật khẩu độ dài tối thiểu
+    // if (password.length < 8) {
+    //     return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 8 ký tự!' })
+    // }
+
+    // Kiểm tra email đã tồn tại trong hệ thống chưa
+    const foundEmail = await User.findOne({ email: email }).exec()
+    if (foundEmail) {
+        return res.status(400).json({ message: 'Địa chỉ email đã được sử dụng!' })
+    }
+
+    // Kiểm tra số điện thoại đã tồn tại trong hệ thống chưa
+    const foundPhoneNumber = await User.findOne({ phoneNumber: phoneNumber }).exec()
     if (foundPhoneNumber) {
-        return res.send({ message: 'Số điện thoại đã được sử dụng!', status: 400 })
+        return res.status(400).json({ message: 'Số điện thoại đã được sử dụng!' })
     }
 
     try {
-        // const hashedPwd = await bcrypt.hash(pwd, 8)
+        // Mã hóa mật khẩu trước khi lưu vào database
+        const hashedPassword = await bcrypt.hash(password, 10)
 
-        const result = await User.create({
-            "fullName": fullName,
-            "phoneNumber": phoneNumber,
-            "email": email,
-            "password": pwd,
-            "modelInterest": model,
-            "isCash": isCash,
-            "roles": roles
+        // Tạo mới user
+        const newUser = await User.create({
+            fullName,
+            phoneNumber,
+            email,
+            password: hashedPassword,
+            modelInterest,
+            isCash,
+            roles
         })
 
-        console.log(result);
+        console.log(newUser)
 
-        res.status(201).send({ message: `New user ${fullName} created!` })
+        res.status(201).json({ message: `Tạo tài khoản thành công cho ${fullName}!` })
     } catch (err) {
-        res.status(500).json({ 'message': err.message })
+        res.status(500).json({ message: err.message })
     }
 }
 
