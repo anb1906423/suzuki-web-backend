@@ -10,6 +10,10 @@ const productSchema = new Schema({
         type: String,
         required: false
     },
+    imageTemp: {
+        type: String,
+        required: true
+    },
     images: [
         {
             type: Schema.Types.ObjectId,
@@ -29,6 +33,10 @@ const productSchema = new Schema({
         required: true
     },
     description: {
+        type: String,
+        required: false
+    },
+    moreInfo: {
         type: String,
         required: false
     },

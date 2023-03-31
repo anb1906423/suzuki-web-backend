@@ -5,7 +5,8 @@ const uploadImage = require('../controllers/imageController')
 const handleNewProduct = async (req, res) => {
     const { name, type, images, href, price, newProduct, description, long,
         wide, high, weight, fuelTankVolume, colorList, wheelbaseLength,
-        engineName, capacity, speedUp, fuelConsumption, maxSpeed, outStanding
+        engineName, capacity, speedUp, fuelConsumption, maxSpeed, outStanding,
+        moreInfo, imageTemp
     } = req.body
     // if (!name || !type || !src || !href || !price || !description) return res.status(400).json({ 'message': 'Tên, loại, nguồn ảnh, đường dẫn, giá và mô tả không được để trống!' })
 
@@ -21,7 +22,7 @@ const handleNewProduct = async (req, res) => {
         //         url: image.url,
         //     };
         // });
-        const createdImages = await uploadImage(images);
+        // const createdImages = await uploadImage(images);
 
         // const createdImages = await Image.insertMany(imageObjects);
         // Lưu các đối tượng ảnh vào cơ sở dữ liệu.
@@ -29,7 +30,6 @@ const handleNewProduct = async (req, res) => {
         const result = await Product.create({
             "name": name,
             "type": type,
-            "src": src,
             "href": href,
             "price": price,
             "newProduct": newProduct,
@@ -47,7 +47,9 @@ const handleNewProduct = async (req, res) => {
             "fuelConsumption": fuelConsumption,
             "maxSpeed": maxSpeed,
             "outStanding": outStanding,
-            images: createdImages.map(image => image._id)
+            "moreInfo": moreInfo,
+            "imageTemp": imageTemp,
+            // images: createdImages.map(image => image._id)
         })
 
         console.log(result);

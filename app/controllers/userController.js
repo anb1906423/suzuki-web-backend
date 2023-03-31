@@ -68,10 +68,10 @@ exports.deleteUser = async (req, res) => {
         return res.status(400).json({ 'message': `User ID ${req.body.id} not found` });
     }
     
-    if (user.roles === 0) {
-        const result = await user.deleteOne({ _id: req.body.id });
-        res.json(result);
-    } else {
-        return res.status(400).json({ 'message': 'Không có quyền xóa user này!' });
-    }
+    const result = await user.deleteOne({ _id: req.body.id });
+    res.json(result);
+    // if (user.roles === 0) {
+    // } else {
+    //     return res.status(400).json({ 'message': 'Không có quyền xóa user này!' });
+    // }
 }
