@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const router = express.Router();
 const app = express()
 const path = require('path')
 const cors = require('cors')
@@ -62,6 +63,10 @@ app.post('/post', (req, res) => {
     console.log('Connected to react!')
     res.redirect('/')
 })
+
+router.get('/_next/static/development/_devPagesManifest.json', ({ req, res }) =>
+  handle(req, res)
+);
 
 app.all('*', (req, res) => {
     res.status(404);
