@@ -7,6 +7,11 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 
+const next = require('next')
+const dev = process.env.NODE_ENV !== 'production'
+const nextApp = next({ dev })
+const handle = nextApp.getRequestHandler()
+
 // const { logger } = require('./middleware/logEvents')
 // const errorHandler = require('./middleware/errorHandler')
 const verifyJWT = require('./app/middlewares/verifyJWT')
@@ -65,8 +70,14 @@ app.post('/post', (req, res) => {
 })
 
 router.get('/_next/static/development/_devPagesManifest.json', ({ req, res }) =>
-  handle(req, res)
+    handle(req, res)
 );
+
+app.get('/san-pham/:id', (req, res) => {
+    const actualPage = '/san-pham/[id]'
+    const queryParams = { id: req.params.id }
+    nextApp.render(req, res, actualPage, queryParams)
+})
 
 app.all('*', (req, res) => {
     res.status(404);
