@@ -5,8 +5,8 @@ const handlePromise = require('../helpers/promise.helper')
 const mongoose = require('mongoose')
 
 const getProduct = async (req, res) => {
-    if (!req?.params?.name) return res.status(400).json({ "message": 'Product name required' });
-    const product = await Product.findOne({ name: req.params.name }).exec();
+    if (!req?.params?.id) return res.status(400).json({ "message": 'Product name required' });
+    const product = await Product.findOne({ id: req.params.id }).exec();
     if (!product) {
         return res.status(204).json({ 'message': `User ID ${req.params.name} not found` });
     }
