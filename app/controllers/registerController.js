@@ -1,7 +1,7 @@
 const User = require('../model/User')
 const bcrypt = require('bcrypt')
 
-const handleRegister = async (req, res) => { 
+const handleRegister = async (req, res) => {
     let roles = 0
 
     // Tìm số lượng người dùng hiện có trong hệ thống
@@ -12,18 +12,18 @@ const handleRegister = async (req, res) => {
         roles = 1;
     }
 
-    const { fullName, phoneNumber, email, password, modelInterest, isCash } = req.body
+    const { fullName, phoneNumber, email, password, modelInterest, isCash, province } = req.body
 
     // Kiểm tra các trường bắt buộc
-    if (!fullName || !phoneNumber || !email ) {
-        return res.status(400).json({ message: 'Họ và tên, số điện thoại, email và password không được để trống!' })
+    if (!fullName || !phoneNumber) {
+        return res.status(400).json({ message: 'Họ và tên, số điện thoại không được để trống!' })
     }
 
     // Kiểm tra định dạng email hợp lệ
-    const validEmail = /\S+@\S+\.\S+/
-    if (!validEmail.test(email)) {
-        return res.status(400).json({ message: 'Địa chỉ email không hợp lệ!' })
-    }
+    // const validEmail = /\S+@\S+\.\S+/
+    // if (!validEmail.test(email)) {
+    //     return res.status(400).json({ message: 'Địa chỉ email không hợp lệ!' })
+    // }
 
     // Kiểm tra mật khẩu độ dài tối thiểu
     // if (password.length < 8) {
@@ -31,10 +31,10 @@ const handleRegister = async (req, res) => {
     // }
 
     // Kiểm tra email đã tồn tại trong hệ thống chưa
-    const foundEmail = await User.findOne({ email: email }).exec()
-    if (foundEmail) {
-        return res.status(400).json({ message: 'Địa chỉ email đã được sử dụng!' })
-    }
+    // const foundEmail = await User.findOne({ email: email }).exec()
+    // if (foundEmail) {
+    //     return res.status(400).json({ message: 'Địa chỉ email đã được sử dụng!' })
+    // }
 
     // Kiểm tra số điện thoại đã tồn tại trong hệ thống chưa
     const foundPhoneNumber = await User.findOne({ phoneNumber: phoneNumber }).exec()
@@ -54,6 +54,7 @@ const handleRegister = async (req, res) => {
             password: hashedPassword,
             modelInterest,
             isCash,
+            province,
             roles
         })
 

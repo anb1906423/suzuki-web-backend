@@ -4,6 +4,6 @@ const registerController = require('../controllers/registerController');
 
 const { checkDuplicateUsernameOrEmail } = require('../middlewares/verify-register.middleware')
 
-router.post('/', [checkDuplicateUsernameOrEmail], registerController.handleRegister);
+router.post('/', registerController.handleRegister);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        // required: true
     },
     phoneNumber: {
         type: String,
@@ -32,6 +32,9 @@ const userSchema = new Schema({
     },
     isCash: {
         type: Boolean
+    },
+    province: {
+        type: String,
     },
     refreshToken: [String],
 })
